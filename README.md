@@ -3,8 +3,7 @@
 A modern, responsive personal portfolio website built to showcase my skills, projects, and experience as a **MERN Stack Developer**.  
 Designed with performance, accessibility, and clean UI in mind.
 
-🔗 **Live Demo:** https://your-vercel-url.vercel.app  
-
+🔗 **Live Demo:** (https://portfolio-sumitkumar.vercel.app/)
 ---
 
 ## 👨‍💻 About Me
