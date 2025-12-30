@@ -1,16 +1,90 @@
-# React + Vite
+# 🚀 Personal Portfolio – Sumit Kumar
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A modern, responsive personal portfolio website built to showcase my skills, projects, and experience as a **MERN Stack Developer**.  
+Designed with performance, accessibility, and clean UI in mind.
 
-Currently, two official plugins are available:
+🔗 **Live Demo:** https://your-vercel-url.vercel.app  
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+---
 
-## React Compiler
+## 👨‍💻 About Me
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+Hi, I’m **Sumit Kumar**, a MERN Stack Developer passionate about building scalable, real-world web applications using modern technologies.  
+I focus on clean UI, performance optimization, and production-ready solutions.
 
-## Expanding the ESLint configuration
+---
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## 🛠️ Tech Stack
+
+**Frontend**
+- React.js
+- JavaScript (ES6+)
+- HTML5, CSS3
+- Bootstrap
+
+**Backend / Services**
+- EmailJS (contact form)
+- Supabase (used in projects)
+
+**Tools & Platforms**
+- Git & GitHub
+- Vite
+- Vercel (Deployment)
+
+---
+
+## ✨ Features
+
+- Fully responsive design (Desktop, Tablet, Mobile)
+- Smooth scroll with active navbar highlighting
+- Project showcase with thumbnails & hover effects
+- Filterable projects section
+- Resume preview & download (PDF modal)
+- Contact form with EmailJS integration
+- AI chatbot widget
+- SEO optimized (meta tags, Open Graph, favicon)
+- Fast performance with lazy-loaded assets
+
+---
+
+## 📂 Project Structure
+
+src/
+├─ components/
+├─ sections/
+├─ data/
+├─ assets/
+└─ styles/
+public/
+├─ projects/
+├─ resume.pdf
+└─ favicon.png
+
+
+---
+
+## ⚙️ Installation & Setup
+
+Clone the repository:
+
+git clone https://github.com/your-username/your-repo-name.git
+cd your-repo-name
+
+Install dependencies:
+
+npm install
+
+
+Run locally:
+
+npm run dev
+
+
+Build for production:
+
+npm run build
+
+
+Preview production build:
+
+npm run preview
