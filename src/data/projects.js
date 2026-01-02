@@ -16,8 +16,8 @@ export const projects = [
     description: "Image compressor & resizer with authentication.",
     image: "/projects/tinyfiles.png",
     tech: ["React", "Supabase"],
-    live: "https://tinyfiles.app",
-    github: "https://github.com/yourname/tinyfiles",
+    live: "https://tiny-files-pro.vercel.app/",
+    github: "https://github.com/Sumitk-19/TinyFilesPro",
   },
   {
     id: 3,
