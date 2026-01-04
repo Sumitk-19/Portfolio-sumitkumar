@@ -18,7 +18,7 @@ function Home() {
 
 
             <h3 className="hero-role">
-              MERN Stack Developer
+              Full Stack Developer
             </h3>
 
             <p className="hero-description">

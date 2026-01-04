@@ -4,10 +4,9 @@ body {
   font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
-/* Override Bootstrap defaults subtly */
 /* =====================
    NAVBAR
-   ===================== */
+===================== */
 
 .navbar {
   position: fixed;
@@ -20,158 +19,71 @@ body {
 
 .nav-inner {
   max-width: 1200px;
-  margin: auto;
-  padding: 18px 24px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-
-
-
-/* CENTER CONTAINER */
-.nav-container {
-  max-width: 1200px;
-  height: 100%;
   margin: 0 auto;
-  padding: 0 1.5rem;
+  padding: 16px 24px;
+  padding-right: 100px;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
+
+  position: relative; /* REQUIRED for socials */
 }
 
+/* =====================
+   NAV LINKS (DESKTOP)
+===================== */
 
-/* Right side container */
-.nav-right {
-  display: flex;
-  align-items: center;
-  gap: 3rem; /* SPACE between links and icons */
-}
-
-/* Nav links stay grouped */
 .nav-links {
   display: flex;
-  gap: 2rem;
+  flex-direction: row;     /* 🔥 FORCE HORIZONTAL */
+  gap: 2.2rem;
+
   list-style: none;
-  margin: 0;
   padding: 0;
+  margin: 0;
 }
 
-/* SOCIAL ICONS — RIGHT */
-.nav-socials {
-  position: absolute;
-  right: 1.5rem;
-  display: flex;
-  gap: 1.2rem;
-}
-
-
-
-section {
-  scroll-margin-top: 80px;
-}
-
-/* Links */
-.nav-links {
+.nav-links li {
   list-style: none;
-  display: flex;
-  gap: 28px;
-}
-
-.nav-links a,
-.nav-socials a {
-  color: #cbd5f5;
-  text-decoration: none;
-  transition: color 0.25s ease;
-}
-
-.nav-actions {
-  display: flex;
-  align-items: center;
-  gap: 18px;
 }
 
 .nav-links a {
-  text-decoration: none;
+  position: relative;
+  padding: 6px 2px;
+
   color: #cbd5f5;
   font-weight: 500;
-  position: relative;
+  text-decoration: none;
+
   transition: color 0.25s ease;
 }
 
-/* Hover underline animation */
+/* Gradient underline */
 .nav-links a::after {
   content: "";
   position: absolute;
   left: 0;
   bottom: -6px;
-  width: 0%;
-  height: 2px;
-  background: linear-gradient(90deg, #22d3ee, #6366f1);
-  transition: width 0.25s ease;
-}
 
-.nav-links a:hover {
-  color: #ffffff;
-}
-
-.nav-links a:hover::after {
   width: 100%;
-}
+  height: 2px;
 
+  background: linear-gradient(
+    90deg,
+    #22d3ee,
+    #6366f1,
+    #a855f7
+  );
 
-.nav-links a:hover,
-.nav-socials a:hover {
-  color: #22d3ee;
-}
+  transform: scaleX(0);
+  transform-origin: left;
+  opacity: 0;
 
+  transition:
+    transform 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+    opacity 0.25s ease;
 
-.navbar-brand,
-.nav-link {
-  color: #e5e7eb !important;
-}
-
-.nav-link:hover {
-  color: #38bdf8 !important;
-}
-
-.section-padding {
-  padding: 5rem 0;
-}
-
-.form-control::placeholder {
-  color: #9ca3af;
-}
-
-.nav-links a.active {
-  color: #22d3ee;
-}
-
-
-/* =====================
-   NAVBAR SOCIAL ICONS
-   ===================== */
-
-.nav-links a.active {
-  color: #22d3ee;
-}
-
-.nav-socials {
-  display: flex;
-  gap: 1rem;
-  color: #cbd5f5;
-}
-
-.nav-socials a {
-  color: #cbd5f5;
-  font-size: 1.1rem;
-  transition: transform 0.25s ease, color 0.25s ease;
-}
-
-.nav-socials a:hover {
-  color: #22d3ee;
-  transform: translateY(-2px);
+  border-radius: 2px;
 }
 
 .nav-links a.active {
@@ -179,79 +91,107 @@ section {
 }
 
 .nav-links a.active::after {
-  content: "";
-  position: absolute;
-  bottom: -6px;
-  left: 0;
-  width: 100%;
-  height: 2px;
-  background: #22d3ee;
+  transform: scaleX(1);
+  opacity: 1;
 }
 
-/* hamburger */
-.hamburger {
-  display: none;
-  cursor: pointer;
-  color: white;
-}
-
-
-/* MobileMenu  */
-.mobile-menu {
-    position: fixed;
-    top: 64px;
-    left: 0;
-    width: 100%;
-    height: calc(100vh - 64px);
-    background: #020617;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding-top: 40px;
-    gap: 24px;
-    z-index: 999;
+/* Hover */
+@media (hover: hover) {
+  .nav-links a:hover {
+    color: #e0e7ff;
   }
 
-.mobile-menu a {
-    font-size: 1.2rem;
-    color: #cbd5f5;
-    text-decoration: none;
-  }
-
-  .mobile-menu a.active {
-    color: #22d3ee;
-  }
-
-  .mobile-socials {
-    display: flex;
-    gap: 24px;
-    margin-top: 20px;
-    font-size: 1.4rem;
-  }
-
-
-@keyframes slideDown {
-  from {
-    opacity: 0;
-    transform: translateY(-10px);
-  }
-  to {
+  .nav-links a:hover::after {
+    transform: scaleX(1);
     opacity: 1;
-    transform: translateY(0);
   }
 }
 
-/* Hide desktop nav on tablets & mobile */
-@media (max-width: 992px) {
-  .desktop {
-    display: none;
-  }
+/* =====================
+   SOCIAL ICONS
+===================== */
 
-  .hamburger {
-    display: block;
+.nav-socials {
+  position: absolute;
+  right: -160px;          
+  top: 50%;
+  transform: translateY(-50%);
+
+  display: flex;
+  align-items: center;
+  gap: 20px;            /* ⬅ space between GitHub & LinkedIn */
+}
+
+/* Icon styling */
+.nav-socials a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 18px;
+  color: #cbd5f5;
+
+  transition: color 0.25s ease, transform 0.25s ease;
+}
+
+.nav-socials a:hover {
+  color: #22d3ee;
+  transform: translateY(-2px);
+}
+
+
+/* =====================
+   MOBILE — DESKTOP NAV OFF
+===================== */
+
+@media (max-width: 768px) {
+  .nav-links,
+  .nav-socials {
+    display: none !important;
   }
 }
 
+
+
+/* Bottom NAVBAR */
+
+.mobile-bottom-nav {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .mobile-bottom-nav {
+    position: fixed;
+    bottom: 1rem;
+    left: 50%;
+    transform: translateX(-50%);
+    width: calc(100% - 2rem);
+    max-width: 420px;
+    height: 64px;
+
+    background: rgba(2, 6, 23, 0.95);
+    backdrop-filter: blur(12px);
+    border-radius: 18px;
+
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+
+    box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+    z-index: 2000;
+  }
+
+  .mobile-bottom-nav a {
+    color: #94a3b8;
+    font-size: 1.3rem;
+    transition: all 0.3s ease;
+  }
+
+  .mobile-bottom-nav a:hover {
+    color: #22d3ee;
+    transform: translateY(-3px);
+  }
+}
 
 
 /* ABOUT SECTION */
