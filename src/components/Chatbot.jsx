@@ -1,120 +1,119 @@
 import { useEffect, useRef, useState } from "react";
 import { FaRobot, FaTimes } from "react-icons/fa";
 
+const knowledgeBase = [
+  {
+    keywords: ["skill", "skills", "technology", "tech"],
+    reply:
+      "Sumit is skilled in MERN Stack (MongoDB, Express, React, Node.js), JavaScript, React, Node.js, Python, Java, Git, GitHub, Docker, and Kubernetes."
+  },
+  {
+    keywords: ["project", "projects", "work"],
+    reply:
+      "Sumit has built projects like BookNest (MERN e-commerce), TinyFiles (image compressor), Friend Fusion (real-time chat app), and multiple production-ready web apps."
+  },
+  {
+    keywords: ["experience", "internship", "background"],
+    reply:
+      "Sumit has over 2 years of hands-on experience in web development and has worked on real-world projects during internships and personal ventures."
+  },
+  {
+    keywords: ["resume", "cv"],
+    reply:
+      "You can view or download Sumit’s resume from the About section using the 'View Resume' button."
+  },
+  {
+    keywords: ["contact", "email", "reach"],
+    reply:
+      "You can contact Sumit through the Contact section or connect via LinkedIn and GitHub from the navigation bar."
+  },
+  {
+    keywords: ["hello", "hi", "hey"],
+    reply:
+      "Hi 👋 I’m VISION AI BOT. Ask me about Sumit’s skills, projects, experience, or resume."
+  }
+];
+
+function getBotReply(message) {
+  const msg = message.toLowerCase();
+
+  for (let item of knowledgeBase) {
+    if (item.keywords.some(keyword => msg.includes(keyword))) {
+      return item.reply;
+    }
+  }
+
+  return "I can help with information about Sumit’s skills, projects, experience, or resume.";
+}
+
 function Chatbot() {
   const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState([
     {
       role: "bot",
-      content:
-        "Hi 👋 I’m VISION AI BOT. Ask me anything about Sumit’s skills, projects, or resume.",
-    },
+      content: "Hi 👋 I’m VISION AI BOT. Ask me anything about Sumit’s portfolio."
+    }
   ]);
   const [input, setInput] = useState("");
-  const [loading, setLoading] = useState(false);
   const [unread, setUnread] = useState(0);
 
   const messagesEndRef = useRef(null);
-  const pulseRef = useRef(null);
 
-  /* ---------- Auto scroll ---------- */
+  /* Auto-scroll */
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages, loading]);
+  }, [messages]);
 
-  /* ---------- ESC to close ---------- */
+  /* Pulse glow every 10s */
   useEffect(() => {
-    const handleEsc = (e) => e.key === "Escape" && setOpen(false);
-    window.addEventListener("keydown", handleEsc);
-    return () => window.removeEventListener("keydown", handleEsc);
-  }, []);
-
-  /* ---------- Pulse glow every 10s ---------- */
-  useEffect(() => {
-    if (open) return;
-
     const interval = setInterval(() => {
-      if (pulseRef.current) {
-        pulseRef.current.classList.add("pulse");
-        setTimeout(() => {
-          pulseRef.current?.classList.remove("pulse");
-        }, 1200);
+      if (!open) {
+        const btn = document.querySelector(".chatbot-button");
+        btn?.classList.add("pulse");
+        setTimeout(() => btn?.classList.remove("pulse"), 1200);
       }
     }, 10000);
 
     return () => clearInterval(interval);
   }, [open]);
 
-  /* ---------- Send message ---------- */
-  const sendMessage = async () => {
-    if (!input.trim() || loading) return;
+  const sendMessage = () => {
+    if (!input.trim()) return;
 
-    const userText = input;
+    const userMessage = { role: "user", content: input };
+    setMessages(prev => [...prev, userMessage]);
+
+    const botReply = getBotReply(input);
+
+    setTimeout(() => {
+      setMessages(prev => [...prev, { role: "bot", content: botReply }]);
+      if (!open) setUnread(u => u + 1);
+    }, 500);
+
     setInput("");
-    setLoading(true);
-
-    setMessages((prev) => [...prev, { role: "user", content: userText }]);
-
-    try {
-      const res = await fetch("/api/chat", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: userText }),
-      });
-
-      if (!res.ok) throw new Error("API error");
-
-      const data = await res.json();
-
-      setMessages((prev) => [
-        ...prev,
-        {
-          role: "bot",
-          content: data.reply || "I couldn’t generate a response.",
-        },
-      ]);
-
-      if (!open) setUnread((u) => u + 1);
-    } catch (err) {
-      setMessages((prev) => [
-        ...prev,
-        {
-          role: "bot",
-          content: "⚠️ AI is temporarily unavailable. Please try again.",
-        },
-      ]);
-    } finally {
-      setLoading(false);
-    }
   };
 
   return (
     <>
-      {/* ---------- Floating Toggle Button ---------- */}
+      {/* Floating Toggle Button */}
       <button
-        ref={pulseRef}
         className="chatbot-button"
         onClick={() => {
           setOpen(true);
           setUnread(0);
         }}
-        aria-label="Open AI Chatbot"
       >
-        <FaRobot size={20} />
+        <FaRobot />
         <span className="chatbot-label">VISION AI BOT</span>
-
         {unread > 0 && <span className="chatbot-badge">{unread}</span>}
       </button>
 
-      {/* ---------- Chat Window ---------- */}
+      {/* Chat Window */}
       {open && (
         <div className="chatbot-window">
           <div className="chatbot-header">
             <span>VISION AI BOT</span>
-            <FaTimes
-              className="chatbot-close"
-              onClick={() => setOpen(false)}
-            />
+            <FaTimes onClick={() => setOpen(false)} />
           </div>
 
           <div className="chatbot-messages">
@@ -126,23 +125,18 @@ function Chatbot() {
                 {msg.content}
               </div>
             ))}
-
-            {loading && <div className="chat-msg bot">Typing…</div>}
             <div ref={messagesEndRef} />
           </div>
 
           <div className="chatbot-input">
             <input
               type="text"
-              placeholder="Ask about projects, skills, resume…"
+              placeholder="Ask about skills, projects, resume…"
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={(e) => e.key === "Enter" && sendMessage()}
-              disabled={loading}
             />
-            <button onClick={sendMessage} disabled={loading}>
-              Send
-            </button>
+            <button onClick={sendMessage}>Send</button>
           </div>
         </div>
       )}
