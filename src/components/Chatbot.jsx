@@ -1,109 +1,120 @@
-import { useEffect, useState } from "react";
-import { TbMessageChatbot } from "react-icons/tb";
-
-const BOT_REPLIES = {
-  hi: "Hi 👋 I’m VISION AI BOT. Ask me about Sumit’s skills, projects, resume, or contact info.",
-  hello: "Hello! How can I help you today?",
-  skills:
-    "Sumit is a MERN Stack Developer skilled in React, Node.js, MongoDB, JavaScript, Java, Python, Docker, Git, and more.",
-  projects:
-    "You can explore projects like BookNest, Friend Fusion, and TinyFiles in the Projects section.",
-  resume:
-    "You can view or download Sumit’s resume from the About section using the Resume button.",
-  contact:
-    "You can reach Sumit through the contact form or via GitHub and LinkedIn links.",
-  default:
-    "I’m not sure about that. Try asking about skills, projects, resume, or contact.",
-};
+import { useEffect, useRef, useState } from "react";
+import { FaRobot, FaTimes } from "react-icons/fa";
 
 function Chatbot() {
   const [open, setOpen] = useState(false);
-  const [input, setInput] = useState("");
-  const [unread, setUnread] = useState(0);
   const [messages, setMessages] = useState([
-    { from: "bot", text: "Hi 👋 I’m VISION AI BOT. Ask me anything!" },
+    {
+      role: "bot",
+      content: "Hi 👋 I’m VISION AI BOT. Ask me anything about Sumit’s portfolio.",
+    },
   ]);
+  const [input, setInput] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [unread, setUnread] = useState(0);
 
-  /* ---------------- Pulse Glow every 10s ---------------- */
+  const messagesEndRef = useRef(null);
+
+  /* ---------- Auto Scroll ---------- */
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
+
+  /* ---------- Pulse Glow every 10s ---------- */
   useEffect(() => {
     const interval = setInterval(() => {
-      const btn = document.querySelector(".chatbot-toggle");
-      if (!btn) return;
-
-      btn.classList.add("pulse");
-      setTimeout(() => btn.classList.remove("pulse"), 1800);
+      if (!open) {
+        const btn = document.querySelector(".chatbot-button");
+        btn?.classList.add("pulse");
+        setTimeout(() => btn?.classList.remove("pulse"), 1200);
+      }
     }, 10000);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [open]);
 
-  /* ---------------- Handle Send ---------------- */
-  const handleSend = () => {
+  /* ---------- Send Message ---------- */
+  const sendMessage = async () => {
     if (!input.trim()) return;
 
-    const lower = input.toLowerCase();
-    let reply = BOT_REPLIES.default;
-
-    Object.keys(BOT_REPLIES).forEach((key) => {
-      if (lower.includes(key)) {
-        reply = BOT_REPLIES[key];
-      }
-    });
-
-    setMessages((prev) => [
-      ...prev,
-      { from: "user", text: input },
-      { from: "bot", text: reply },
-    ]);
-
-    if (!open) {
-      setUnread((prev) => prev + 1);
-    }
-
+    const userMsg = { role: "user", content: input };
+    setMessages((prev) => [...prev, userMsg]);
     setInput("");
-  };
+    setLoading(true);
 
-  /* ---------------- Toggle Chat ---------------- */
-  const toggleChat = () => {
-    setOpen((prev) => !prev);
-    setUnread(0);
+    try {
+      const res = await fetch("/api/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message: input }),
+      });
+
+      const data = await res.json();
+
+      const botMsg = {
+        role: "bot",
+        content: data.reply || "Sorry, I couldn’t respond.",
+      };
+
+      setMessages((prev) => [...prev, botMsg]);
+
+      if (!open) setUnread((u) => u + 1);
+    } catch {
+      setMessages((prev) => [
+        ...prev,
+        { role: "bot", content: "AI service unavailable right now." },
+      ]);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <>
-      {/* ===== Floating Toggle ===== */}
-      <div className="chatbot-toggle" onClick={toggleChat}>
-        <span className="chatbot-icon">
-          <TbMessageChatbot size={20} />
-          {unread > 0 && <span className="chatbot-badge">{unread}</span>}
-        </span>
+      {/* ---------- Floating Button ---------- */}
+      <button
+        className="chatbot-button"
+        onClick={() => {
+          setOpen(true);
+          setUnread(0);
+        }}
+      >
+        <FaRobot size={20} />
         <span className="chatbot-label">VISION AI BOT</span>
-      </div>
 
-      {/* ===== Chat Window ===== */}
+        {unread > 0 && <span className="chatbot-badge">{unread}</span>}
+      </button>
+
+      {/* ---------- Chat Window ---------- */}
       {open && (
-        <div className="chatbot-box">
+        <div className="chatbot-window">
           <div className="chatbot-header">
-            VISION AI BOT
-            <span onClick={() => setOpen(false)}>×</span>
+            <span>VISION AI BOT</span>
+            <FaTimes onClick={() => setOpen(false)} />
           </div>
 
           <div className="chatbot-messages">
             {messages.map((msg, i) => (
-              <div key={i} className={`chat-message ${msg.from}`}>
-                {msg.text}
+              <div
+                key={i}
+                className={`chat-msg ${msg.role === "user" ? "user" : "bot"}`}
+              >
+                {msg.content}
               </div>
             ))}
+            {loading && <div className="chat-msg bot">Typing...</div>}
+            <div ref={messagesEndRef} />
           </div>
 
           <div className="chatbot-input">
             <input
+              type="text"
+              placeholder="Ask about projects, skills, resume…"
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              placeholder="Ask something..."
-              onKeyDown={(e) => e.key === "Enter" && handleSend()}
+              onKeyDown={(e) => e.key === "Enter" && sendMessage()}
             />
-            <button onClick={handleSend}>Send</button>
+            <button onClick={sendMessage}>Send</button>
           </div>
         </div>
       )}
