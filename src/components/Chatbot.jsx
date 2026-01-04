@@ -6,7 +6,8 @@ function Chatbot() {
   const [messages, setMessages] = useState([
     {
       role: "bot",
-      content: "Hi 👋 I’m VISION AI BOT. Ask me anything about Sumit’s portfolio.",
+      content:
+        "Hi 👋 I’m VISION AI BOT. Ask me anything about Sumit’s skills, projects, or resume.",
     },
   ]);
   const [input, setInput] = useState("");
@@ -14,55 +15,73 @@ function Chatbot() {
   const [unread, setUnread] = useState(0);
 
   const messagesEndRef = useRef(null);
+  const pulseRef = useRef(null);
 
-  /* ---------- Auto Scroll ---------- */
+  /* ---------- Auto scroll ---------- */
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
+  }, [messages, loading]);
 
-  /* ---------- Pulse Glow every 10s ---------- */
+  /* ---------- ESC to close ---------- */
   useEffect(() => {
+    const handleEsc = (e) => e.key === "Escape" && setOpen(false);
+    window.addEventListener("keydown", handleEsc);
+    return () => window.removeEventListener("keydown", handleEsc);
+  }, []);
+
+  /* ---------- Pulse glow every 10s ---------- */
+  useEffect(() => {
+    if (open) return;
+
     const interval = setInterval(() => {
-      if (!open) {
-        const btn = document.querySelector(".chatbot-button");
-        btn?.classList.add("pulse");
-        setTimeout(() => btn?.classList.remove("pulse"), 1200);
+      if (pulseRef.current) {
+        pulseRef.current.classList.add("pulse");
+        setTimeout(() => {
+          pulseRef.current?.classList.remove("pulse");
+        }, 1200);
       }
     }, 10000);
 
     return () => clearInterval(interval);
   }, [open]);
 
-  /* ---------- Send Message ---------- */
+  /* ---------- Send message ---------- */
   const sendMessage = async () => {
-    if (!input.trim()) return;
+    if (!input.trim() || loading) return;
 
-    const userMsg = { role: "user", content: input };
-    setMessages((prev) => [...prev, userMsg]);
+    const userText = input;
     setInput("");
     setLoading(true);
+
+    setMessages((prev) => [...prev, { role: "user", content: userText }]);
 
     try {
       const res = await fetch("/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: input }),
+        body: JSON.stringify({ message: userText }),
       });
+
+      if (!res.ok) throw new Error("API error");
 
       const data = await res.json();
 
-      const botMsg = {
-        role: "bot",
-        content: data.reply || "Sorry, I couldn’t respond.",
-      };
-
-      setMessages((prev) => [...prev, botMsg]);
-
-      if (!open) setUnread((u) => u + 1);
-    } catch {
       setMessages((prev) => [
         ...prev,
-        { role: "bot", content: "AI service unavailable right now." },
+        {
+          role: "bot",
+          content: data.reply || "I couldn’t generate a response.",
+        },
+      ]);
+
+      if (!open) setUnread((u) => u + 1);
+    } catch (err) {
+      setMessages((prev) => [
+        ...prev,
+        {
+          role: "bot",
+          content: "⚠️ AI is temporarily unavailable. Please try again.",
+        },
       ]);
     } finally {
       setLoading(false);
@@ -71,13 +90,15 @@ function Chatbot() {
 
   return (
     <>
-      {/* ---------- Floating Button ---------- */}
+      {/* ---------- Floating Toggle Button ---------- */}
       <button
+        ref={pulseRef}
         className="chatbot-button"
         onClick={() => {
           setOpen(true);
           setUnread(0);
         }}
+        aria-label="Open AI Chatbot"
       >
         <FaRobot size={20} />
         <span className="chatbot-label">VISION AI BOT</span>
@@ -90,7 +111,10 @@ function Chatbot() {
         <div className="chatbot-window">
           <div className="chatbot-header">
             <span>VISION AI BOT</span>
-            <FaTimes onClick={() => setOpen(false)} />
+            <FaTimes
+              className="chatbot-close"
+              onClick={() => setOpen(false)}
+            />
           </div>
 
           <div className="chatbot-messages">
@@ -102,7 +126,8 @@ function Chatbot() {
                 {msg.content}
               </div>
             ))}
-            {loading && <div className="chat-msg bot">Typing...</div>}
+
+            {loading && <div className="chat-msg bot">Typing…</div>}
             <div ref={messagesEndRef} />
           </div>
 
@@ -113,8 +138,11 @@ function Chatbot() {
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={(e) => e.key === "Enter" && sendMessage()}
+              disabled={loading}
             />
-            <button onClick={sendMessage}>Send</button>
+            <button onClick={sendMessage} disabled={loading}>
+              Send
+            </button>
           </div>
         </div>
       )}
