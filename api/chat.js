@@ -11,8 +11,8 @@ export default async function handler(req, res) {
       {
         method: "POST",
         headers: {
-          "Authorization": `Bearer ${process.env.GROQ_API_KEY}`,
           "Content-Type": "application/json",
+          Authorization: `Bearer ${process.env.GROQ_API_KEY}`,
         },
         body: JSON.stringify({
           model: "llama3-8b-8192",
@@ -20,7 +20,7 @@ export default async function handler(req, res) {
             {
               role: "system",
               content:
-                "You are Vision AI Bot, a portfolio assistant for Sumit Kumar. Answer only about his skills, projects, experience, and resume.",
+                "You are VISION AI BOT for Sumit Kumar's portfolio. Answer about skills, projects, resume, and experience clearly and professionally.",
             },
             { role: "user", content: message },
           ],
@@ -30,11 +30,10 @@ export default async function handler(req, res) {
 
     const data = await response.json();
 
-    res.status(200).json({
+    return res.status(200).json({
       reply: data.choices?.[0]?.message?.content || "No response",
     });
   } catch (err) {
-    console.error("AI Error:", err);
-    res.status(500).json({ reply: "AI service error" });
+    return res.status(500).json({ reply: "AI service error." });
   }
 }
