@@ -6,8 +6,8 @@ export const projects = [
     description: "E-commerce book selling platform with admin dashboard.",
     image: "/projects/booknest.png",   // ✅ public path
     tech: ["React", "Node", "MongoDB"],
-    live: "https://booknest-live.com",
-    github: "https://github.com/Sumitk-19/BookNest",
+    live: "https://book-store-six-ruby.vercel.app/",
+    github: "https://github.com/Sumitk-19/BookStore",
   },
   {
     id: 2,
