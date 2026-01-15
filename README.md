@@ -67,6 +67,7 @@ public/
 Clone the repository:
 
 git clone https://github.com/Sumitk-19/Portfolio-sumitkumar.git
+
 cd your-repo-name
 
 Install dependencies:
