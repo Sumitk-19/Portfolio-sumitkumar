@@ -61,29 +61,30 @@ public/
 ```
 
 ---
-```
+
 ## ⚙️ Installation & Setup
 
 Clone the repository:
-
+```
 git clone https://github.com/Sumitk-19/Portfolio-sumitkumar.git
 
 cd your-repo-name
-
+```
+```
 Install dependencies:
 
 npm install
-
-
+```
+```
 Run locally:
 
 npm run dev
-
-
+```
+```
 Build for production:
 
 npm run build
-
+```
 
 Preview production build:
 
