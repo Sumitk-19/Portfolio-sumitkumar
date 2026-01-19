@@ -8,7 +8,7 @@ Designed with performance, accessibility, and clean UI in mind.
 
 ## 👨‍💻 About Me
 
-Hi, I’m **Sumit Kumar**, a MERN Stack Developer passionate about building scalable, real-world web applications using modern technologies.  
+Hi, I’m **Sumit Kumar**, a Full Stack Developer passionate about building scalable, real-world web applications using modern technologies.  
 I focus on clean UI, performance optimization, and production-ready solutions.
 
 ---
@@ -45,7 +45,7 @@ I focus on clean UI, performance optimization, and production-ready solutions.
 - Fast performance with lazy-loaded assets
 
 ---
-
+```
 ## 📂 Project Structure
 
 src/
@@ -58,10 +58,10 @@ public/
 ├─ projects/
 ├─ resume.pdf
 └─ favicon.png
-
+```
 
 ---
-
+```
 ## ⚙️ Installation & Setup
 
 Clone the repository:
@@ -88,3 +88,4 @@ npm run build
 Preview production build:
 
 npm run preview
+```
