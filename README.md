@@ -70,23 +70,23 @@ git clone https://github.com/Sumitk-19/Portfolio-sumitkumar.git
 
 cd your-repo-name
 ```
-```
-Install dependencies:
 
+Install dependencies:
+```
 npm install
 ```
-```
-Run locally:
 
+Run locally:
+```
 npm run dev
 ```
-```
-Build for production:
 
+Build for production:
+```
 npm run build
 ```
-```
-Preview production build:
 
+Preview production build:
+```
 npm run preview
 ```
